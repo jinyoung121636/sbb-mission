@@ -1,9 +1,9 @@
 package com.mysite.sbb;
 
-import com.mysite.answer.Answer;
-import com.mysite.answer.AnswerRepository;
-import com.mysite.question.Question;
-import com.mysite.question.QuestionRepository;
+import com.mysite.sbb.answer.Answer;
+import com.mysite.sbb.answer.AnswerRepository;
+import com.mysite.sbb.question.Question;
+import com.mysite.sbb.question.QuestionRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
