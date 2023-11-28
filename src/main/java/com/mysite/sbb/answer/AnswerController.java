@@ -24,7 +24,7 @@ public class AnswerController {
     private final QuestionService questionService;
     private final AnswerService answerService;
     private final UserService userService;
-
+    // 답변 생성
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create/{id}")
     public String createAnswer(
@@ -42,7 +42,7 @@ public class AnswerController {
        this.answerService.create(question, answerForm.getContent(), siteUser);
         return String.format("redirect:/question/detail/%s",id);
     }
-
+    // 답변 수정(get)
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
     public String answerModify(AnswerForm answerForm, @PathVariable("id") Integer id, Principal principal){
@@ -53,7 +53,7 @@ public class AnswerController {
         answerForm.setContent(answer.getContent());
         return "answer_form";
     }
-
+    // 답변 수정(post)
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String answerModify(@Valid AnswerForm answerForm, BindingResult bindingResult, @PathVariable("id") Integer id, Principal principal){
@@ -67,7 +67,7 @@ public class AnswerController {
         this.answerService.modify(answer, answerForm.getContent());
         return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
     }
-
+    // 답변 삭제
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
     public String answerDelete(Principal principal, @PathVariable("id") Integer id) {
@@ -78,4 +78,14 @@ public class AnswerController {
         this.answerService.delete(answer);
         return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
     }
+    // 답변 추천
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/vote/{id}")
+    public String answerVote(Principal principal, @PathVariable("id") Integer id) {
+        Answer answer = this.answerService.getAnswer(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.answerService.vote(answer, siteUser);
+        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+    }
+
 }

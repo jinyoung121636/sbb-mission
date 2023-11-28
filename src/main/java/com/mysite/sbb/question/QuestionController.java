@@ -23,27 +23,28 @@ public class QuestionController {
     private final QuestionService questionService;
     private final UserService userService;
 
+    // 질문 리스트
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page){
         Page<Question> paging= this.questionService.getList(page);
         model.addAttribute("paging", paging);
         return "question_list";
     }
-
+    // 질문 상세페이지
     @GetMapping("/detail/{id}")
     public String datail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm){
         Question question = this.questionService.getQuestion(id);
         model.addAttribute("question",question);
         return "question_detail";
     }
-
+    //질문 생성(get)
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String questionCreate(QuestionForm questionForm){
         return "question_form";
     }
 
-
+    //질문 생성(post)
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
     public String questionCreate(
@@ -57,7 +58,7 @@ public class QuestionController {
         this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser );
         return "redirect:/question/list";
     }
-
+    //질문 수정(get)
     @GetMapping("/modify/{id}")
     public String questionModify(QuestionForm questionForm, @PathVariable("id") Integer id, Principal principal){
         Question question = this.questionService.getQuestion(id);
@@ -68,7 +69,7 @@ public class QuestionController {
         questionForm.setContent(question.getContent());
         return "question_form";
     }
-
+    //질문 수정(post)
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String questionModify(@Valid QuestionForm questionForm, BindingResult bindingResult, Principal principal, @PathVariable("id") Integer id) {
@@ -82,7 +83,7 @@ public class QuestionController {
         this.questionService.modify(question, questionForm.getSubject(), questionForm.getContent());
         return String.format("redirect:/question/detail/%s", id);
     }
-
+    //질문 삭제
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
     public String questionDelete(Principal principal, @PathVariable("id") Integer id) {
@@ -92,5 +93,14 @@ public class QuestionController {
         }
         this.questionService.delete(question);
         return "redirect:/";
+    }
+    //추천
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/vote/{id}")
+    public String questionVote(Principal principal, @PathVariable("id") Integer id){
+        Question question = this.questionService.getQuestion(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+            this.questionService.vote(question, siteUser);
+            return String.format("redirect:/question/detail/%s",id);
     }
 }
