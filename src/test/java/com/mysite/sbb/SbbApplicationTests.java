@@ -6,6 +6,8 @@ import com.mysite.sbb.answer.AnswerService;
 import com.mysite.sbb.question.Question;
 import com.mysite.sbb.question.QuestionRepository;
 import com.mysite.sbb.question.QuestionService;
+import com.mysite.sbb.user.SiteUser;
+import com.mysite.sbb.user.UserService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +24,10 @@ class SbbApplicationTests {
 
     @Autowired
     private QuestionService questionService;
-
     @Autowired
     private AnswerService answerService;
+    @Autowired
+    private UserService userService;
 
 
 //    @Test
@@ -44,13 +47,22 @@ class SbbApplicationTests {
 //            this.questionService.create(subject, content, null);
 //        }
 //    }
+//    @Test
+//    void t3_testJpa(){
+//        Question question = questionService.getQuestion(736);
+//        for(int i = 1; i<=100; i++){
+//            String content = "테스트 댓글 데이터";
+//            this.answerService.create(question,content,null);
+//        }
+//    }
 
     @Test
-    void t3_testJpa(){
-        Question question = questionService.getQuestion(736);
+    void t4_testJpa(){
+        Question question = questionService.getQuestion(737);
+        SiteUser siteUser = userService.getUser("user1");
         for(int i = 1; i<=100; i++){
             String content = "테스트 댓글 데이터";
-            this.answerService.create(question,content,null);
+            this.answerService.create(question,content,siteUser);
         }
     }
 }
