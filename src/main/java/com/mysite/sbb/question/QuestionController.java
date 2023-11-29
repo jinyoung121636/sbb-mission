@@ -1,6 +1,8 @@
 package com.mysite.sbb.question;
 
+import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.answer.AnswerForm;
+import com.mysite.sbb.answer.AnswerService;
 import com.mysite.sbb.user.SiteUser;
 import com.mysite.sbb.user.UserService;
 import jakarta.validation.Valid;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ import java.security.Principal;
 public class QuestionController {
     private final QuestionService questionService;
     private final UserService userService;
+    private final AnswerService answerService;
 
     // 질문 리스트
     @GetMapping("/list")
@@ -37,11 +41,19 @@ public class QuestionController {
     }
     // 질문 상세페이지
     @GetMapping("/detail/{id}")
-    public String datail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm){
-        Question question = this.questionService.getQuestion(id);
-        model.addAttribute("question",question);
+    public String datail(Model model,
+                         @PathVariable("id") Integer id,
+                         AnswerForm answerForm,
+                         @RequestParam(value = "page", defaultValue = "0") int page)
+   {
+       Question question = this.questionService.getQuestion(id);
+       model.addAttribute("question", question);
+
+       Page<Answer> paging = this.answerService.getList(id, page);
+       model.addAttribute("paging",paging);
         return "question_detail";
     }
+
     //질문 생성(get)
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
