@@ -2,7 +2,7 @@
 <div layout:fragment="content" class="container my-3">
     <div class="row my-3 justify-content-end">
         <div class="col-auto">
-            <a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
+            <a th:href="@{/question/create}" class="btn btn-sm ">질문쓰기</a>
         </div>
     </div>
     <table class="table">
@@ -84,7 +84,7 @@
     <!-- 검색해서 찾기 -->
     <div class="mt-3 input-group mb-3 col-auto justify-center">
         <input type="text" id="search_kw" class="form-control-sm border" th:value="${kw}" placeholder="검색어를 입력하세요" aria-describedby="basic-addon2">
-        <span class="btn btn-sm btn-outline-secondary input-group-text" id="btn_search">찾아보기</span>
+        <span class="btn btn-sm btn-outline-secondary input-group-text" id="btn_search"><i class="fa-solid fa-magnifying-glass"></i></span>
     </div>
 <!--    <div class="col-auto justify-center" style="width: fit-content">-->
 <!--        <div class="input-group">-->
