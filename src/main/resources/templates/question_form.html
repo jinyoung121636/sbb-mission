@@ -2,10 +2,10 @@
 <div layout:fragment="content" class="container">
   <div class="border-bottom pb-2 d-flex justify-content-between">
   <h5 class="my-3 font-bold text-purple-500">
-    <i class="fa-regular fa-pen-to-square"></i> 질문수정</h5>
+    <i class="fa-regular fa-pen-to-square"></i> 질문쓰기</h5>
   <div class="click bg-ghost" onclick="goBack()">
-  <h5 class="my-3 font-bold text-blue-400">
-    <i class=" fa-solid fa-right-from-bracket"></i> 나가기</h5>
+  <h5 class="hover:text-blue-600 my-3 font-bold text-blue-400">
+    <i class="fa-solid fa-right-from-bracket"></i> 나가기</h5>
     </div>
   </div>
   <form th:object="${questionForm}" method="post">
@@ -19,7 +19,9 @@
       <label for="content" class="form-label">내용</label>
       <textarea th:field="*{content}" class="form-control" rows="10"></textarea>
     </div>
-    <input type="submit" value="저장하기" class="btn btn-primary my-2">
+    <div class="flex justify-content-end">
+    <input type="submit" value="저장하기" class="btn btn-sm btn-outline ">
+    </div>
   </form>
 </div>
 </html>
