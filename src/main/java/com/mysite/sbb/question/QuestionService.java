@@ -1,23 +1,13 @@
 package com.mysite.sbb.question;
 
 import com.mysite.sbb.DataNotFoundException;
-import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.user.SiteUser;
-import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -89,9 +79,22 @@ public class QuestionService {
     public void delete(Question question){
         this.questionRepository.delete(question);
     }
-
+// 추천자
     public void vote(Question question, SiteUser siteUser){
         question.getVoter().add(siteUser);
         this.questionRepository.save(question);
     }
+
+    // 질문 조회수 증가
+    public void incrementHit(Integer id) {
+        Optional<Question> optionalQuestion = this.questionRepository.findById(id);
+        if (optionalQuestion.isPresent()) {
+            Question question = optionalQuestion.get();
+            question.setHit(question.getHit() + 1);
+            this.questionRepository.save(question);
+        } else {
+            throw new DataNotFoundException("Question not found");
+        }
+    }
+
 }

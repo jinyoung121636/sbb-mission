@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
-import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,28 +32,32 @@ public class QuestionController {
     public String list(
             Model model,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "kw", defaultValue = "") String kw)
-    {
-        Page<Question> paging= this.questionService.getList(page, kw);
+            @RequestParam(value = "kw", defaultValue = "") String kw
+            ) {
+        Page<Question> paging = this.questionService.getList(page, kw);
         model.addAttribute("paging", paging);
         model.addAttribute("kw", kw);
         return "question_list";
     }
+
     // 질문 상세페이지
     @GetMapping("/detail/{id}")
     public String datail(Model model,
                          @PathVariable("id") Integer id,
                          AnswerForm answerForm,
                          @RequestParam(value = "page", defaultValue = "0") int page,
-                         @RequestParam(value = "sortType", defaultValue = "latest") String sortType)
-   {
-       Question question = this.questionService.getQuestion(id);
-       model.addAttribute("question", question);
+                         @RequestParam(value = "sortType", defaultValue = "latest") String sortType) {
 
-       Page<Answer> paging = this.answerService.getList(id, page, sortType);
-       model.addAttribute("paging",paging);
+        Question question = this.questionService.getQuestion(id);
+        model.addAttribute("question", question);
+        Page<Answer> paging = this.answerService.getList(id, page, sortType);
+        model.addAttribute("paging", paging);
+
+
         return "question_detail";
     }
+
+
 
     //질문 생성(get)
     @PreAuthorize("isAuthenticated()")

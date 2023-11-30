@@ -1,7 +1,14 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container my-3">
     <!-- (질문) -->
-    <h2 class="border-bottom py-2" th:text="${question.subject}"></h2>
+    <div class="border-bottom pb-3 d-flex justify-content-between">
+    <h2 class="font-bold text-black-500" style="font-size: 20px;"><제목></h2>
+    <h2 class="flex-grow-1 font-bold text-black-500" style="font-size: 20px; padding-left: 5px;" th:text="${question.subject}"></h2>
+    <div class="click bg-ghost" onclick="goBack()">
+        <h5 class="hover:text-blue-600 font-bold text-blue-400">
+            <i class="fa-solid fa-right-from-bracket fa-rotate-180"></i> 나가기</h5>
+    </div>
+    </div>
     <!--(질문)프로필&사용자이름-->
     <div class="card my-3">
         <div style="margin: -15px;" class="card-body">
@@ -90,6 +97,7 @@
                 ><i class="fa-regular fa-pen-to-square"></i> </a>
 
                 <!--(답변) 삭제-->
+
                 <a href="javascript:void(0);"
                    th:data-uri="@{|/answer/delete/${question.id}|}"
                    class="delete btn btn-sm btn-outline-secondary"
@@ -113,19 +121,22 @@
         <ul class="pagination justify-content-center">
             <li class="page-item" th:classappend="${!paging.hasPrevious()} ? 'disabled'">
                 <a class="page-link"
-                    th:href="@{|?page=${paging.number-paging.number}|}">
+                   href="javascript:void(0)"
+                    th:data-page="@{paging.number-paging.number}">
                     <span>처음</span>
                 </a>
             </li>
             <li class="page-item" th:classappend="${!paging.hasPrevious()} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{|?page=${paging.number-1}|}">
+                   href="javascript:void(0)"
+                   th:data-page="@{paging.number-1}">
                     <span>이전</span>
                 </a>
             </li>
             <li class="page-item" th:if="${paging.number > 5}">
                 <a class="page-link"
-                   th:href="@{|?page=${paging.number-6}|}">
+                   href="javascript:void(0)"
+                   th:data-page="@{paging.number-6}">
                     <span>…</span>
                 </a>
             </li>
@@ -138,18 +149,21 @@
             </li>
             <li class="page-item" th:if="${paging.number < (paging.getTotalElements()/paging.size)-5}">
                 <a class="page-link"
-                   th:href="@{|?page=${paging.number+6}|}">
+                   href="javascript:void(0)"
+                   th:data-page="@{paging.number+6}">
                     <span>…</span>
                 </a>
             </li>
             <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{|?page=${paging.number+1}|}">
+                   href="javascript:void(0)"
+                   th:data-page="@{paging.number+1}">
                     <span>다음</span>
                 </a>
             <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{|?page=${paging.getTotalElements()/paging.size}|}">
+                   href="javascript:void(0)"
+                   th:data-page="@{paging.getTotalElements()/paging.size}">
                     <span>마지막</span>
                 </a>
         </ul>
@@ -164,27 +178,57 @@
     </form>
 </div>
 <script layout:fragment="script" type='text/javascript' th:inline="javascript">
-    const delete_elements = document.getElementsByClassName("delete");
-    Array.from(delete_elements).forEach(function(element) {
+    const page_elements = document.getElementsByClassName("page-link");
+    Array.from(page_elements).forEach(function(element) {
         element.addEventListener('click', function() {
-            if(confirm("정말로 삭제하시겠습니까?")) {
-                location.href = this.dataset.uri;
-            };
-        });
-    });
-    const recommend_elements = document.getElementsByClassName("recommend");
-    Array.from(recommend_elements).forEach(function (element){
-        element.addEventListener('click', function() {
-            if(confirm("정말로 추천하시겠습니까?")) {
-                location.href = this.dataset.uri;
-            };
+            document.getElementById('page').value = this.dataset.page;
+            document.getElementById('searchForm').submit();
         });
     });
 
-    var questionId = [[${question.id}]]
-    function reloadPage(){
-        var sortType = document.getElementById("sortType").value;
-        window.location.href='/question/detail/'+ questionId + '?sortType=' + sortType;
-    }
+    const delete_elements = document.getElementsByClassName("delete");
+    Array.from(delete_elements).forEach(function(element) {
+        element.addEventListener('click', function () {
+            Swal.fire({
+                title: "확인",
+                text: "삭제 하시겠습니까?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "삭제",
+                cancelButtonText: "취소"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.href = this.dataset.uri;
+                }
+            });
+        });
+    });
+            const recommend_elements = document.getElementsByClassName("recommend");
+            Array.from(recommend_elements).forEach(function (element) {
+                element.addEventListener('click', function () {
+                    Swal.fire({
+                        title: "확인",
+                        text: "추천 하시겠습니까?",
+                        icon: "question",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "추천",
+                        cancelButtonText: "닫기"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                    location.href = this.dataset.uri;
+                    }
+                });
+            });
+        });
+
+            var questionId = [[${question.id}]]
+            function reloadPage() {
+                var sortType = document.getElementById("sortType").value;
+                window.location.href = '/question/detail/' + questionId + '?sortType=' + sortType;
+            }
 </script>
 </html>

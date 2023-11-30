@@ -14,6 +14,7 @@ import java.util.Set;
 @Setter
 @Entity
 public class Question {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -36,6 +37,8 @@ public class Question {
 
     @ManyToMany
     Set<SiteUser> voter;
+
+    private Integer hit;
 
 //    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Comment> comments = new ArrayList<>();
