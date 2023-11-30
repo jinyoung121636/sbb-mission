@@ -52,9 +52,11 @@
     </div>
     <!-- (답변) 갯수 표시 -->
     <h5 class="border-bottom my-3 py-2" th:text="|${#lists.size(question.answerList)}개의 답변이 있습니다.|"></h5>
-    <select class="form-select form-select-sm" aria-label=".form-select-sm example" style="width: 110px">
-        <option value="1">최신순</option>
-        <option value="2">추천많은순</option>
+    <!-- 정렬 옵션 셀렉트 박스 -->
+    <select id="sortType" class="form-select form-select-sm" aria-label=".form-select-sm example" style="width: 110px" onchange="reloadPage()">
+<!--        <option selected>정렬기준</option>-->
+        <option value="latest">최신순</option>
+<!--        <option value="popular">추천많은순</option>-->
     </select>
 
     <!-- (답변) 반복 시작 -->
@@ -76,7 +78,7 @@
             <div class="d-flex flex-grow-1" th:utext="${@commonUtil.markdown(answer.content)}" th:text="${answer.content}"></div>
             <div style="padding-top: 25px;">
                 <!--(답변) 추천-->
-                <span class="position-absolute translate-middle badge rounded-fill bg-info"
+                <span class="position-absolute translate-middle badge rounded-fill bg-warning"
                       th:text="${#lists.size(answer.voter)}"></span>
                 <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
                    th:data-uri="@{|/answer/vote/${answer.id}|}">
@@ -161,7 +163,7 @@
         <div class="flex justify-content-end"><input type="submit" value="답변등록" class="btn btn-primary my-2"></div>
     </form>
 </div>
-<script layout:fragment="script" type='text/javascript'>
+<script layout:fragment="script" type='text/javascript' th:inline="javascript">
     const delete_elements = document.getElementsByClassName("delete");
     Array.from(delete_elements).forEach(function(element) {
         element.addEventListener('click', function() {
@@ -178,5 +180,11 @@
             };
         });
     });
+
+    var questionId = [[${question.id}]]
+    function reloadPage(){
+        var sortType = document.getElementById("sortType").value;
+        window.location.href='/question/detail/'+ questionId + '?sortType=' + sortType;
+    }
 </script>
 </html>

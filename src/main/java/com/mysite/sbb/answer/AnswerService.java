@@ -30,7 +30,7 @@ public class AnswerService {
         return answer;
     }
 //답변 가져오기
-    public Answer getAnswer(Integer id){
+    public Answer getAnswer(int id){
         Optional<Answer> answer = this.answerRepository.findById(id);
         if(answer.isPresent()){
             return answer.get();
@@ -55,11 +55,17 @@ public class AnswerService {
     }
 
 //답변 목록 페이징
-    public Page<Answer> getList(int id, int page){
+    public Page<Answer> getList(int id, int page, String sortType){
         List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createDate"));
+        if("latest".equals(sortType)){
+            //최신순
+            sorts.add(Sort.Order.desc("createDate"));
+        }
+//        else if("popular".equals(sortType)){
+//            //추천 많은 순
+//            sorts.add(Sort.Order.desc("getVoterSize"));
+//        }
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-
         return this.answerRepository.findAllByQuestionId(id,pageable);
     }
 // 답변 키워드 검색하고 정렬

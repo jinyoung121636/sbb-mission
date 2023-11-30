@@ -44,12 +44,13 @@ public class QuestionController {
     public String datail(Model model,
                          @PathVariable("id") Integer id,
                          AnswerForm answerForm,
-                         @RequestParam(value = "page", defaultValue = "0") int page)
+                         @RequestParam(value = "page", defaultValue = "0") int page,
+                         @RequestParam(value = "sortType", defaultValue = "latest") String sortType)
    {
        Question question = this.questionService.getQuestion(id);
        model.addAttribute("question", question);
 
-       Page<Answer> paging = this.answerService.getList(id, page);
+       Page<Answer> paging = this.answerService.getList(id, page, sortType);
        model.addAttribute("paging",paging);
         return "question_detail";
     }
