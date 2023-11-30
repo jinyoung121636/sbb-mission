@@ -33,7 +33,6 @@ public class Answer {
     @ManyToMany
     Set<SiteUser> voter;
 
-    public int getVoterSize(){
-        return this.voter.size();
-    }
+//    @OneToMany(mappedBy = "answer", cascade= CascadeType.ALL, orphanRemoval = true)
+//    private List<Comment> comments = new ArrayList<>();
 }

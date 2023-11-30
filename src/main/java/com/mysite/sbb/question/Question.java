@@ -37,4 +37,7 @@ public class Question {
     @ManyToMany
     Set<SiteUser> voter;
 
+//    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Comment> comments = new ArrayList<>();
+
 }
